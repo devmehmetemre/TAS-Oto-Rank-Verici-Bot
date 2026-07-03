@@ -1,0 +1,18 @@
+{
+  "name": "asker-oyunu-rutbe-bot",
+  "version": "1.0.0",
+  "description": "Discord'dan Roblox oyunu için rütbe verme botu",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "deploy-commands": "node deploy-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "googleapis": "^140.0.1"
+  }
+}
