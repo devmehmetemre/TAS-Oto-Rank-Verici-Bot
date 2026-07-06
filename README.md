@@ -120,3 +120,42 @@ linki sadece okumaya izin veriyor, yazmaya değil).
   Google tarafında birkaç dakika sürebilir; ayrıca Roblox oyunu bu CSV'yi
   60 saniyede bir yeniden çekiyor. Yani rütbe verildikten sonra oyuna
   yansıması 1-5 dakika sürebilir, bu normaldir.
+
+---
+
+## 5) Roblox Doğrulama + Otomatik Discord Rolü
+
+Tablona artık **E sütunu (DiscordID)** ekleniyor otomatik olarak; elle bir şey
+eklemene gerek yok, ama isteğe bağlı olarak E1 hücresine "DiscordID" yazıp
+başlık ekleyebilirsin (sadece görünüm için, kod başlığa bakmıyor).
+
+**Kullanıcılar için akış:**
+1. `/dogrula kullaniciadi:RobloxKullaniciAdi` yazar.
+2. Bot ona bir kod verir (örn. `TAS-A1B2C3`).
+3. Roblox profiline gidip **"Açıklama" (About)** kısmına o kodu ekler, kaydeder.
+4. `/dogrulatamamla` yazar.
+5. Bot kontrol eder, doğrularsa Discord ID'sini tabloya (E sütunu) yazar.
+
+**Rütbe/branş verildiğinde Discord rolünün de otomatik değişmesi için:**
+1. Discord sunucunda her rütbe/branş için bir rol oluştur (örn. "Albay", "Kara
+   Kuvvetleri" gibi — isimler istediğin gibi olabilir, önemli olan rol ID'si).
+2. **Bot rolünü** bu rollerin **üstüne** taşı (Sunucu Ayarları > Roller —
+   listede ne kadar yukarıdaysa o kadar "güçlü" sayılır; botun rolü verdiği
+   tüm rütbe/branş rollerinin üstünde olmalı, yoksa Discord izin vermez).
+3. `roleMap.js` dosyasını aç, her rütbe/branş için ilgili rolün ID'sini
+   (Geliştirici Modu açıkken role sağ tık > Kimliği Kopyala) tırnakların
+   içine yapıştır. Boş bıraktığın satırlar için sadece tabloya yazılır,
+   Discord rolü atanmaz.
+4. `.env` dosyanda `GUILD_ID` alanının dolu olduğundan emin ol (rol
+   senkronizasyonu hangi sunucuda çalışılacağını bu değerden anlar).
+5. Botu yeniden başlat (Railway'deyse yeniden deploy et).
+
+Bundan sonra `/albayver userid:...` çalıştırdığında, o kullanıcı doğrulanmışsa
+Discord'daki eski rütbe rolü otomatik kaldırılıp yeni rol otomatik verilir —
+sonuçta gelen mesajda "Discord rolü de otomatik güncellendi" notu görürsün.
+Doğrulanmamış kullanıcılarda sadece tabloya yazılır, Discord tarafı etkilenmez.
+
+**Not:** Doğrulama kodları bot çalışırken bellekte tutulur — bot yeniden
+başlarsa bekleyen (tamamlanmamış) doğrulamalar sıfırlanır, kullanıcı
+`/dogrula`'yı tekrar çalıştırması yeterlidir. Tamamlanmış doğrulamalar
+(tabloya yazılanlar) etkilenmez, kalıcıdır.

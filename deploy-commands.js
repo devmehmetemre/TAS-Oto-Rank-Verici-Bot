@@ -9,8 +9,9 @@
 require("dotenv").config();
 const { REST, Routes, SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const { RANKS } = require("./ranks");
+const { BRANCHES } = require("./branches");
 
-const commands = RANKS.map((rank) => {
+const rankCommands = RANKS.map((rank) => {
 	return new SlashCommandBuilder()
 		.setName(rank.command)
 		.setDescription(`Bir kullanıcıya "${rank.name}" rütbesini verir`)
@@ -21,12 +22,43 @@ const commands = RANKS.map((rank) => {
 				.setRequired(true)
 				.setMinValue(1)
 		)
-		// Varsayılan olarak sadece "Rolleri Yönet" yetkisi olanlar görebilsin/kullanabilsin.
-		// Sunucu yöneticisi Discord'da Sunucu Ayarları > Entegrasyonlar kısmından
-		// bunu istediği role/kişiye özel olarak değiştirebilir.
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
 		.toJSON();
 });
+
+const branchCommands = BRANCHES.map((branch) => {
+	return new SlashCommandBuilder()
+		.setName(branch.command)
+		.setDescription(`Bir kullanıcıya "${branch.name}" branşını verir`)
+		.addIntegerOption((option) =>
+			option
+				.setName("userid")
+				.setDescription("Roblox UserID (sayısal)")
+				.setRequired(true)
+				.setMinValue(1)
+		)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+		.toJSON();
+});
+
+const verifyCommands = [
+	new SlashCommandBuilder()
+		.setName("dogrula")
+		.setDescription("Discord hesabını Roblox hesabınla eşleştirmeye başlar")
+		.addStringOption((option) =>
+			option
+				.setName("kullaniciadi")
+				.setDescription("Roblox kullanıcı adın")
+				.setRequired(true)
+		)
+		.toJSON(),
+	new SlashCommandBuilder()
+		.setName("dogrulatamamla")
+		.setDescription("Roblox profiline eklediğin kodu kontrol edip doğrulamayı tamamlar")
+		.toJSON(),
+];
+
+const commands = [...rankCommands, ...branchCommands, ...verifyCommands];
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
